@@ -65,6 +65,12 @@ class BookingController extends Controller
             ], 400);
         }
         $booking = Booking::find($request->booking_id);
+        if ($booking->qrCode->is_used == 'yes') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'QR Code already used'
+            ], 400);
+        }
         $booking->status = 'canceled';
         $booking->save();
         return response()->json([
