@@ -39,7 +39,7 @@ class AuthController extends Controller
                 'gender' => $request->gender,
                 'age' => $request->age,
                 'phone' => $request->phone,
-                'role' => $request->role,
+                'role' => $request->role ?? 'user',
             ]);
 
             $token = $user->createToken('auth_token')->plainTextToken;
