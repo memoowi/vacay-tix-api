@@ -47,6 +47,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/payment', [PaymentController::class, 'payBooking']);
 
+        Route::patch('/qr-code', [QRCodeController::class, 'useQRCode']);
+
         Route::get('/admin/bookings', [BookingController::class, 'indexAdminOnTour']);
     });
 });
