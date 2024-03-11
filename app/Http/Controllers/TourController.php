@@ -176,4 +176,62 @@ class TourController extends Controller
             ], 404);
         }
     }
+
+    public function deleteTourImage(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'image_url' => 'required|string'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->errors()
+            ], 400);
+        }
+
+        try {
+            $tour = Tour::find($id);
+            if (!$tour) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tour not found'
+                ], 404);
+            }
+            $tourCurrentImages = json_decode($tour->image_urls);
+
+            if (!in_array($request->image_url, $tourCurrentImages)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Image not found'
+                ], 404);
+            }
+
+            if (count($tourCurrentImages) == 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tour must have at least one image'
+                ], 400);
+            }
+
+            if (file_exists(public_path($request->image_url))) {
+                unlink(public_path($request->image_url));
+            }
+
+            $tour->image_urls = array_diff($tourCurrentImages, [$request->image_url]);
+            
+            $tour->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Image deleted successfully'
+            ], 200);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

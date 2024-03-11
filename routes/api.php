@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/tours', [TourController::class, 'store']);
         Route::post('/tours/{id}', [TourController::class, 'update']);
         Route::delete('/tours/{id}', [TourController::class, 'destroy']);
+        Route::patch('/tours/{id}', [TourController::class, 'deleteTourImage']);
     });
 
     
