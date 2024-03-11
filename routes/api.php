@@ -24,11 +24,14 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/tours', [TourController::class, 'index']);
-Route::post('/tours', [TourController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::middleware('admin')->group(function () {
+        Route::post('/tours', [TourController::class, 'store']);
+    });
+    
     // Route::put('/tours/{id}', [TourController::class, 'update']);
     // Route::delete('/tours/{id}', [TourController::class, 'destroy']);
     
