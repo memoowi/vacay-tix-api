@@ -28,14 +28,18 @@ Route::get('/tours', [TourController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+
     Route::get('/bookings', [BookingController::class, 'index']);
+    Route::post('/bookings', [BookingController::class, 'store']);
+    // Route::post('/bookings/{id}', [BookingController::class, 'update']);
+    // Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
     
     Route::middleware('admin')->group(function () {
         Route::post('/tours', [TourController::class, 'store']);
         Route::post('/tours/{id}', [TourController::class, 'update']);
         Route::delete('/tours/{id}', [TourController::class, 'destroy']);
         Route::patch('/tours/{id}', [TourController::class, 'deleteTourImage']);
-        
+
         Route::get('/admin/bookings', [BookingController::class, 'indexAdminOnTour']);
     });
 });
