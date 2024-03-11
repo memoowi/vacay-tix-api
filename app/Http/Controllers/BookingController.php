@@ -86,7 +86,7 @@ class BookingController extends Controller
             ], 400);
         }
         $booking = Booking::find($request->booking_id);
-        $booking->load(['tour', 'user', 'payment']);
+        $booking->load(['tour', 'user', 'payment','qrCode']);
         return response()->json([
             'status' => 'success',
             'data' => $booking
