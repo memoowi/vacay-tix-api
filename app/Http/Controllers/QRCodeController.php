@@ -46,4 +46,38 @@ class QRCodeController extends Controller
             'message' => 'QR Code generated successfully'
         ], 200);
     }
+
+    public function getQRCode(Request $request)
+    {
+        try {
+            $request->validate([
+                'booking_id' => 'required|exists:bookings,id',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->errors()
+            ], 400);
+        }
+
+        $booking = Booking::find($request->booking_id);
+        $qrCode = $booking->qrCode;
+
+        if (!$qrCode) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'QR Code not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $qrCode
+        ], 200);
+    }
+
+    public function useQRCode(Request $request)
+    {
+        
+    }
 }
