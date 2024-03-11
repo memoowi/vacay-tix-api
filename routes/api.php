@@ -34,6 +34,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/tours/{id}', [TourController::class, 'destroy']);
         Route::patch('/tours/{id}', [TourController::class, 'deleteTourImage']);
     });
-
-    
 });
