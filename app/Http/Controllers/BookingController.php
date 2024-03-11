@@ -6,7 +6,6 @@ use App\Models\Booking;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Throwable;
 
 class BookingController extends Controller
 {
@@ -71,6 +70,26 @@ class BookingController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Booking canceled'
+        ], 200);
+    }
+
+    public function show(Request $request)
+    {
+        try {
+            $request->validate([
+                'booking_id' => 'required|exists:bookings,id'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->errors()
+            ], 400);
+        }
+        $booking = Booking::find($request->booking_id);
+        $booking->load(['tour', 'user', 'payment']);
+        return response()->json([
+            'status' => 'success',
+            'data' => $booking
         ], 200);
     }
 }
