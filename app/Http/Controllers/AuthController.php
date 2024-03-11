@@ -56,4 +56,42 @@ class AuthController extends Controller
             ], 500);
         }
     }
+    public function login(Request $request)
+    {
+
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        try {
+            $user = User::where('username', $request->username)->orWhere('email', $request->username)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            if (!Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Wrong password',
+                ], 401);
+            }
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'status' => 'success',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
