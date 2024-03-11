@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bookings/details', [BookingController::class, 'show']);
 
     Route::put('/generate-qr-code', [QRCodeController::class, 'generateQRCode']);
+    Route::get('/qr-code', [QRCodeController::class, 'getQRCode']);
     
     Route::middleware('admin')->group(function () {
         Route::post('/tours', [TourController::class, 'store']);
