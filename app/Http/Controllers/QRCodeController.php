@@ -78,6 +78,37 @@ class QRCodeController extends Controller
 
     public function useQRCode(Request $request)
     {
-        
+        try {
+            $request->validate([
+                'qr_code' => 'required|exists:q_r_codes,qr_code',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->errors()
+            ], 400);
+        }
+
+        $qrCode = QRCode::where('qr_code', $request->qr_code)->first();
+        if (!$qrCode) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'QR Code not found'
+            ], 404);
+        }
+
+        if ($qrCode->is_used == 'yes') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'QR Code already used'
+            ], 400);
+        }
+
+        $qrCode->update(['is_used' => 'yes']);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'QR Code used successfully'
+        ], 200);
     }
 }
