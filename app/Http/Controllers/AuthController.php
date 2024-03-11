@@ -86,12 +86,22 @@ class AuthController extends Controller
                 'status' => 'success',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-            ]);
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function logout(Request $request)
+    {
+
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logout successfully',
+        ], 200);
     }
 }
