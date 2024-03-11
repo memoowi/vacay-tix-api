@@ -22,6 +22,13 @@ class PaymentController extends Controller
         }
 
         $booking = Booking::find($request->booking_id);
+
+        if ($booking->status !== 'pending') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Booking already paid',
+            ], 400);
+        }
         $booking->payment()->create([
             'payment_date' => now(),
             'amount' => $booking->total_price,

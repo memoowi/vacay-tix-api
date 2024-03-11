@@ -25,4 +25,8 @@ class Booking extends Model
     {
         return $this->hasOne(Payment::class);
     }
+    public function qrCode(): HasOne
+    {
+        return $this->hasOne(QRCode::class);
+    }
 }

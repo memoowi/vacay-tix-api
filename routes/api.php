@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\TourController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::patch('/bookings', [BookingController::class, 'cancelBooking']);
     Route::get('/bookings/details', [BookingController::class, 'show']);
+
+    Route::put('/generate-qr-code', [QRCodeController::class, 'generateQRCode']);
     
     Route::middleware('admin')->group(function () {
         Route::post('/tours', [TourController::class, 'store']);
