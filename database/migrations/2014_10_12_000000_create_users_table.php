@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female']);
             $table->integer('age');
             $table->string('phone');
-            $table->enum('role', ['admin', 'user']);
+            $table->enum('role', ['admin', 'user'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
