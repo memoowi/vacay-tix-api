@@ -17,7 +17,7 @@ class TourController extends Controller
             $imageUrls = json_decode($data->image_urls);
 
             $data->image_urls = $imageUrls;
-            $data->load('bookings');
+            // $data->load('bookings');
             if ($data) {
                 return response()->json([
                     'status' => 'success',
