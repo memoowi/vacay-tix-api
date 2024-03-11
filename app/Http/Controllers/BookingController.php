@@ -65,7 +65,7 @@ class BookingController extends Controller
             ], 400);
         }
         $booking = Booking::find($request->booking_id);
-        if ($booking->qrCode->is_used == 'yes') {
+        if ($booking->qrCode && $booking->qrCode->is_used == 'yes') {
             return response()->json([
                 'status' => 'error',
                 'message' => 'QR Code already used'
@@ -92,7 +92,7 @@ class BookingController extends Controller
             ], 400);
         }
         $booking = Booking::find($request->booking_id);
-        $booking->load(['tour', 'user', 'payment','qrCode']);
+        $booking->load(['tour', 'user', 'payment', 'qrCode']);
         return response()->json([
             'status' => 'success',
             'data' => $booking
