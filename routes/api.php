@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TourController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/tours/{id}', [TourController::class, 'update']);
         Route::delete('/tours/{id}', [TourController::class, 'destroy']);
         Route::patch('/tours/{id}', [TourController::class, 'deleteTourImage']);
+
+        Route::post('/payment', [PaymentController::class, 'payBooking']);
 
         Route::get('/admin/bookings', [BookingController::class, 'indexAdminOnTour']);
     });
