@@ -30,8 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('admin')->group(function () {
         Route::post('/tours', [TourController::class, 'store']);
-        Route::patch('/tours/{id}', [TourController::class, 'update']);
-        // Route::delete('/tours/{id}', [TourController::class, 'destroy']);
+        Route::post('/tours/{id}', [TourController::class, 'update']);
+        Route::delete('/tours/{id}', [TourController::class, 'destroy']);
     });
 
     

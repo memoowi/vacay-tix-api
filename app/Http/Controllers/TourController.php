@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tour;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -93,6 +94,7 @@ class TourController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         try {
             $request->validate([
                 'name' => 'required|string|min:3',
@@ -109,20 +111,26 @@ class TourController extends Controller
             ], 400);
         }
 
-        if ($request->hasFile('image_urls')) {
-            $image_urls = [];
-            foreach ($request->file('image_urls') as $image) {
-                $newName = time() . '-' . uniqid() . '-' . rand(1000, 9999) . '.' . $image->getClientOriginalExtension();
-                $image->storeAs('public/tour-images', $newName);
-                $image_urls[] = 'storage/tour-images/' . $newName;
-            }
-        } else {
-            $image_urls = [];
-        }
-
         try {
             $tour = Tour::find($id);
+            if (!$tour) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tour not found'
+                ], 404);
+            }
             $tourCurrentImages = json_decode($tour->image_urls);
+            
+            if ($request->hasFile('image_urls')) {
+                $image_urls = [];
+                foreach ($request->file('image_urls') as $image) {
+                    $newName = time() . '-' . uniqid() . '-' . rand(1000, 9999) . '.' . $image->getClientOriginalExtension();
+                    $image->storeAs('public/tour-images', $newName);
+                    $image_urls[] = 'storage/tour-images/' . $newName;
+                }
+            } else {
+                $image_urls = [];
+            }
             $image_urls = array_merge($tourCurrentImages, $image_urls);
 
             $tour->update([
@@ -143,6 +151,29 @@ class TourController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $tour = Tour::find($id);
+        if ($tour) {
+            $tourCurrentImages = json_decode($tour->image_urls);
+            foreach ($tourCurrentImages as $image) {
+                if (file_exists(public_path($image))) {
+                    unlink(public_path($image));
+                }
+            }
+            $tour->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Tour deleted successfully'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tour not found'
+            ], 404);
         }
     }
 }
