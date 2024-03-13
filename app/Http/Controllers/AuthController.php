@@ -19,8 +19,8 @@ class AuthController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8'],
                 'gender' => ['string', 'in:male,female'],
-                'age' => ['required', 'integer', 'min:1', 'max:100'],
-                'phone' => ['required', 'string', 'max:255'],
+                'age' => ['integer', 'min:1', 'max:100'],
+                'phone' => ['string', 'max:255'],
                 'role' => ['string', 'in:admin,user', 'nullable'],
             ]);
         } catch (ValidationException $e) {
@@ -36,8 +36,8 @@ class AuthController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'gender' => $request->gender,
-                'age' => $request->age,
+                'gender' => $request->gender ?? 'male',
+                'age' => $request->age ?? 18,
                 'phone' => $request->phone,
                 'role' => $request->role ?? 'user',
             ]);
