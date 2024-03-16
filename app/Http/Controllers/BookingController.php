@@ -12,6 +12,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $bookings = $request->user()->bookings;
+        $bookings->load(['tour', 'payment', 'qrCode']);
         return response()->json([
             'status' => 'success',
             'data' => $bookings
